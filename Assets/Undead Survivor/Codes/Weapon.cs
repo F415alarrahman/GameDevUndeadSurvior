@@ -15,16 +15,7 @@ public class Weapon : MonoBehaviour
 
     void Awake()
     {
-        player = GetComponentInParent<Player>(); // Ambil komponen Player dari parent
-        if (player == null)
-        {
-            Debug.LogError("Weapon harus menjadi anak dari Player!");
-        }
-    }
-
-    void Start()
-    {
-        Init(damage, count); // Ambil nilai awal dari Inspector
+        player = GameManager.Instance.player; // Ambil referensi Player dari GameManager
     }
 
     void Update()
@@ -52,11 +43,24 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    public void Init(float damage, int count)
+    public void Init(ItemData data)
     {
-        this.damage = damage;
-        this.count = count;
+        name = "Weapon" + data.itemID;
+        transform.parent = player.transform; // Set parent ke Player
+        transform.localPosition = Vector3.zero; // Reset posisi
 
+        id = data.itemID;
+        damage = data.baseDamage;
+        count = (int)data.baseCount;
+
+        for (int index = 0; index < GameManager.Instance.pool.prefabs.Length; index++)
+        {
+            if (data.projectile == GameManager.Instance.pool.prefabs[index])
+            {
+                prefabId = index;
+                break;
+            }
+        }
         switch (id)
         {
             case 0:
@@ -69,19 +73,13 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    public void LevelUp(float damageIncrease, int countIncrease)
+    public void LevelUp(float damage, int count)
     {
-        damage += damageIncrease;
-        count += countIncrease;
+        this.damage += damage;
+        this.count += count;
 
-        switch (id)
-        {
-            case 0:
-                Batch();
-                break;
-            default:
-                break;
-        }
+        if (id == 0)
+            Batch();
     }
 
     void Batch()
