@@ -10,6 +10,18 @@ public class Weapon : MonoBehaviour
     public int count;
     public float speed;
 
+    float timer;
+    Player player; // Referensi ke komponen Player
+
+    void Awake()
+    {
+        player = GetComponentInParent<Player>(); // Ambil komponen Player dari parent
+        if (player == null)
+        {
+            Debug.LogError("Weapon harus menjadi anak dari Player!");
+        }
+    }
+
     void Start()
     {
         Init(damage, count); // Ambil nilai awal dari Inspector
@@ -23,13 +35,20 @@ public class Weapon : MonoBehaviour
                 transform.Rotate(Vector3.back * speed * Time.deltaTime);
                 break;
             default:
+                timer += Time.deltaTime; // Tambah timer untuk senjata lain
+
+                if (timer > speed)
+                {
+                    timer = 0f;
+                    Fire();
+                }
                 break;
         }
 
         // Tombol lompat = upgrade senjata
         if (Input.GetButtonDown("Jump"))
         {
-            LevelUp(5, 1); // Naikkan damage dan count sedikit demi sedikit
+            LevelUp(10, 1); // Naikkan damage dan count sedikit demi sedikit
         }
     }
 
@@ -45,6 +64,7 @@ public class Weapon : MonoBehaviour
                 Batch();
                 break;
             default:
+                speed = 0.3f; // Set kecepatan untuk senjata lain
                 break;
         }
     }
@@ -88,7 +108,7 @@ public class Weapon : MonoBehaviour
             bullet.Rotate(Vector3.forward * angle);
             bullet.Translate(Vector3.up * 1.5f, Space.Self);
 
-            bullet.GetComponent<Bullet>().Init(damage, -1);
+            bullet.GetComponent<Bullet>().Init(damage, -1, Vector3.zero);
         }
 
         // Nonaktifkan peluru sisa jika count berkurang
@@ -96,5 +116,21 @@ public class Weapon : MonoBehaviour
         {
             transform.GetChild(i).gameObject.SetActive(false);
         }
+    }
+
+    void Fire()
+    {
+        if (!player.scanner.nearestTarget)
+
+            return; // Tidak ada target terdekat
+
+        Vector3 targetPos = player.scanner.nearestTarget.position;
+        Vector3 dir = targetPos - transform.position;
+        dir = dir.normalized;
+
+        Transform bullet = GameManager.Instance.pool.Get(prefabId).transform;
+        bullet.position = transform.position;
+        bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);
+        bullet.GetComponent<Bullet>().Init(damage, count, dir);
     }
 }

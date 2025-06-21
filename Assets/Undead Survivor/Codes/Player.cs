@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
 {
     public Vector2 inputVec;
     public float speed;    // Start is called before the first frame update
+    public Scanner scanner; // Scanner component to find targets
 
     Rigidbody2D rigid; // Rigidbody component for physics
     SpriteRenderer spriter; // Sprite renderer for visual representation
@@ -16,6 +17,7 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         spriter = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        scanner = GetComponent<Scanner>();
     }
 
     void Update()
