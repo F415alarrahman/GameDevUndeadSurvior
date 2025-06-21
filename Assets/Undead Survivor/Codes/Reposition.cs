@@ -4,57 +4,44 @@ using System.Collections;
 public class Reposition : MonoBehaviour
 {
     Collider2D coll;
+
     void Awake()
     {
         coll = GetComponent<Collider2D>();
     }
-    private bool hasRepositioned = false;
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Area") || hasRepositioned)
+        // Hanya reposisi jika objek ini adalah Enemy
+        if (!CompareTag("Enemy"))
             return;
 
+        // Ambil posisi dan arah pemain
         Vector3 playerPos = GameManager.Instance.player.transform.position;
         Vector3 myPos = transform.position;
         Vector3 playerDir = GameManager.Instance.player.inputVec;
 
-        // Skip kalau player diam
-        if (playerDir == Vector3.zero) return;
+        // Lewati kalau player diam
+        if (playerDir == Vector3.zero)
+            return;
 
         float diffX = Mathf.Abs(playerPos.x - myPos.x);
         float diffY = Mathf.Abs(playerPos.y - myPos.y);
 
-        // Skip kalau belum terlalu jauh
-        if (diffX < 15 && diffY < 15) return;
+        // Lewati kalau jaraknya belum cukup jauh
+        if (diffX < 15 && diffY < 15)
+            return;
 
-        float dirX = playerDir.x < 0 ? -1 : 1;
-        float dirY = playerDir.y < 0 ? -1 : 1;
-
-        switch (transform.tag)
+        // Pindahkan musuh menjauh dari pemain dengan sedikit variasi posisi
+        if (coll.enabled)
         {
-            case "Ground":
-                hasRepositioned = true;
+            Vector3 offset = new Vector3(
+                Random.Range(-3f, 3f),
+                Random.Range(-3f, 3f),
+                0f
+            );
 
-                if (diffX > diffY)
-                    transform.Translate(Vector3.right * dirX * 40);
-                else
-                    transform.Translate(Vector3.up * dirY * 40);
-
-                StartCoroutine(ResetFlag());
-                break;
-            case "Enemy":
-                if (coll.enabled)
-                {
-                    transform.Translate(playerDir * 20 + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0f));
-                }
-                break;
+            transform.Translate(playerDir * 20 + offset);
         }
-    }
-
-    IEnumerator ResetFlag()
-    {
-        yield return new WaitForSeconds(0.3f);
-        hasRepositioned = false;
     }
 }
