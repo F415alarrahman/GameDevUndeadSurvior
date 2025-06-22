@@ -15,7 +15,11 @@ MonoBehaviour:
   itemType: 0
   itemID: 0
   itemName: Skop
-  itemDesc: 
+  itemDesc: 'cek {0}% level
+
+    cek {1}% nama
+
+    cek {2}% desc'
   itemIcon: {fileID: -181907988, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   baseDamage: 4.5
   baseCount: 3
@@ -32,3 +36,4 @@ MonoBehaviour:
   - 1
   - 2
   projectile: {fileID: 3674137758591886220, guid: f343d1a18256b66408ac2e0d18e362fd, type: 3}
+  hand: {fileID: 143021600, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}

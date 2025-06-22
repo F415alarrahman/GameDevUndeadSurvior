@@ -15,7 +15,11 @@ MonoBehaviour:
   itemType: 1
   itemID: 1
   itemName: Pistol
-  itemDesc: 
+  itemDesc: 'oi {0}% level
+
+    oi {1}% nama
+
+    oi {2}% desc'
   itemIcon: {fileID: -205726582, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   baseDamage: 3
   baseCount: 0
@@ -32,3 +36,4 @@ MonoBehaviour:
   - 3
   - 4
   projectile: {fileID: 6654761276538680236, guid: ac01bdd4ec65db74eb4bf70ca9393351, type: 3}
+  hand: {fileID: -353751291, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}

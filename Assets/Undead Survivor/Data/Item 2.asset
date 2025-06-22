@@ -15,7 +15,11 @@ MonoBehaviour:
   itemType: 2
   itemID: 2
   itemName: SarungTangan
-  itemDesc: 
+  itemDesc: 'hh {0}% level
+
+    hh {1}% nama
+
+    hh {2}% desc'
   itemIcon: {fileID: -201829820, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   baseDamage: 0
   baseCount: 0
@@ -32,3 +36,4 @@ MonoBehaviour:
   - 0
   - 0
   projectile: {fileID: 0}
+  hand: {fileID: 0}

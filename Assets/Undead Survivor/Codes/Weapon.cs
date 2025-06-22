@@ -20,6 +20,8 @@ public class Weapon : MonoBehaviour
 
     void Update()
     {
+        if (!GameManager.Instance.isLive)
+            return;
         switch (id)
         {
             case 0:
@@ -50,8 +52,8 @@ public class Weapon : MonoBehaviour
         transform.localPosition = Vector3.zero; // Reset posisi
 
         id = data.itemID;
-        damage = data.baseDamage;
-        count = (int)data.baseCount;
+        damage = data.baseDamage * Character.Damage; // Set damage berdasarkan data dan karakter
+        count = (int)data.baseCount * Character.Count; // Set count berdasarkan data dan karakter
 
         for (int index = 0; index < GameManager.Instance.pool.prefabs.Length; index++)
         {
@@ -64,13 +66,19 @@ public class Weapon : MonoBehaviour
         switch (id)
         {
             case 0:
-                speed = 150;
+                speed = 150 * Character.WeaponSpeed; // Set kecepatan untuk senjata melee
                 Batch();
                 break;
             default:
-                speed = 0.3f; // Set kecepatan untuk senjata lain
+                speed = 0.3f * Character.WeaponRate; // Set kecepatan untuk senjata lain
                 break;
         }
+
+        Hand hand = player.hands[(int)data.itemType];
+        hand.spriter.sprite = data.hand; // Set sprite tangan sesuai item
+        hand.gameObject.SetActive(true); // Aktifkan tangan
+
+        player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
     }
 
     public void LevelUp(float damage, int count)
@@ -80,6 +88,8 @@ public class Weapon : MonoBehaviour
 
         if (id == 0)
             Batch();
+
+        player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
     }
 
     void Batch()
